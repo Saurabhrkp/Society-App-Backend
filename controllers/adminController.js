@@ -1,9 +1,5 @@
 const User = require('../models/User');
-const Post = require('../models/Post');
-const File = require('../models/File');
-
-// DB Config
-const { bucket } = require('../models/database');
+const Flat = require('../models/Flat');
 
 const extractTags = (string) => {
   var tags = string.toLowerCase().split(' ');
@@ -13,15 +9,15 @@ const extractTags = (string) => {
 exports.savePost = async (req, res, next) => {
   req.body.author = req.user.id;
   req.body.tags = extractTags(req.body.tagString);
-  const post = await new Post(req.body).save();
+  const flat = await new Flat(req.body).save();
   const user = await User.findById(req.user.id);
-  user.posts.push(post._id);
+  user.posts.push(flat._id);
   user.save();
-  await Post.populate(post, {
+  await Flat.populate(flat, {
     path: 'author video photos',
     select: '_id name avatar source key',
   });
-  res.json(post);
+  res.json(flat);
 };
 
 exports.getUsers = async (req, res) => {
@@ -30,19 +26,19 @@ exports.getUsers = async (req, res) => {
 };
 
 exports.getAllPosts = async (req, res) => {
-  const posts = await Post.find();
+  const posts = await Flat.find();
   res.json(posts);
 };
 
 exports.updatePost = async (req, res) => {
   req.body.publishedDate = new Date().toISOString();
   req.body.tags = extractTags(req.body.tagString);
-  const updatedPost = await Post.findOneAndUpdate(
-    { _id: req.post._id },
+  const updatedPost = await Flat.findOneAndUpdate(
+    { _id: req.flat._id },
     { $set: req.body },
     { new: true, runValidators: true }
   );
-  await Post.populate(updatedPost, {
+  await Flat.populate(updatedPost, {
     path: 'author video photos',
     select: '_id name avatar source key',
   });
@@ -50,9 +46,9 @@ exports.updatePost = async (req, res) => {
 };
 
 exports.deletePost = async (req, res) => {
-  const { _id } = req.post;
+  const { _id } = req.flat;
   await User.findOneAndUpdate(req.user.id, { $pull: { posts: _id } });
-  const deletedPost = await Post.findOneAndDelete({ _id });
+  const deletedPost = await Flat.findOneAndDelete({ _id });
   res.json(deletedPost);
 };
 
@@ -68,7 +64,7 @@ const deleteFileFromBucket = async (file) => {
 
 exports.deleteAllFiles = async (req, res, next) => {
   try {
-    const { video = {}, photos = [{}] } = req.post;
+    const { video = {}, photos = [{}] } = req.flat;
     if (video !== {}) {
       await File.findOneAndDelete({
         key: video.key,
@@ -107,8 +103,8 @@ exports.deleteFile = async (req, res, next, file) => {
       field = 'video';
       data = 1;
     }
-    await Post.findByIdAndUpdate(
-      { _id: req.post._id },
+    await Flat.findByIdAndUpdate(
+      { _id: req.flat._id },
       { [operator]: { [field]: [data] } },
       { new: true, runValidators: true }
     );

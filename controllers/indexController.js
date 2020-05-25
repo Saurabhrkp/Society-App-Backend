@@ -2,7 +2,7 @@
 const Post = require('../models/Post');
 const mongoose = require('mongoose');
 
-exports.getPostBySlug = async (req, res, next, slug) => {
+exports.getFlatBySlug = async (req, res, next, slug) => {
   const post = await Post.findOne({ slug: slug });
   req.post = post;
   const posterId = mongoose.Types.ObjectId(req.post.author._id);
