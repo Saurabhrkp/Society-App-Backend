@@ -7,7 +7,16 @@ const FlatSchema = new Schema({
   flatno: { type: Number, required: true },
   name: { type: String, required: true },
   description: { type: String, required: true },
+  email: { type: String, lowercase: true, required: false },
+  phone: { type: Number, required: true },
+  rental: { type: Boolean, required: true, default: false },
+  bhk: { type: Number, required: true, enum: [1, 2, 3], default: 2 },
   records: [{ type: Schema.ObjectId, ref: 'Record', required: false }],
+});
+
+// Virtual for this FlatSchema object's URL.
+FlatSchema.virtual('url').get(function () {
+  return '/flat/' + this._id;
 });
 
 const autoPopulateUserBy = function (next) {

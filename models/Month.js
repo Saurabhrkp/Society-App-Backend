@@ -9,6 +9,11 @@ const MonthSchema = new Schema({
   records: [{ type: Schema.ObjectId, ref: 'Record', required: false }],
 });
 
+// Virtual for this MonthSchema object's URL.
+MonthSchema.virtual('url').get(function () {
+  return '/month/' + this._id;
+});
+
 const autoPopulateUserBy = function (next) {
   this.populate('records');
   next();

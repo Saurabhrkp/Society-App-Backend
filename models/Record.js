@@ -28,6 +28,11 @@ const RecordSchema = new Schema({
   },
 });
 
+// Virtual for this RecordSchema object's URL.
+RecordSchema.virtual('url').get(function () {
+  return '/record/' + this._id;
+});
+
 const calculateTotalBy = function (next) {
   this.finalAmount =
     +this.maintenance.amount +
