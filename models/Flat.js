@@ -10,7 +10,7 @@ const FlatSchema = new Schema({
   email: { type: String, lowercase: true, required: false },
   phone: { type: Number, required: true },
   rental: { type: Boolean, required: true, default: false },
-  bhk: { type: Number, required: true, enum: [1, 2, 3], default: 2 },
+  bhk: { type: String, required: true, enum: ['1', '2', '3'], default: '2' },
   records: [{ type: Schema.ObjectId, ref: 'Record', required: false }],
 });
 

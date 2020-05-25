@@ -1,7 +1,6 @@
 // Loading models
 const User = require('../models/User');
 const passport = require('passport');
-const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const { body, validationResult } = require('express-validator');
 
@@ -114,15 +113,4 @@ exports.checkAuth = (req, res, next) => {
     return next();
   }
   res.redirect('/signin');
-};
-
-exports.getUserByID = async (req, res, next, id) => {
-  const user = await User.findOne({ id: id });
-  req.profile = user;
-  const profileId = mongoose.Types.ObjectId(req.profile._id);
-  if (req.user && profileId.equals(req.user._id)) {
-    req.isAuthUser = true;
-    return next();
-  }
-  next();
 };
