@@ -3,11 +3,7 @@ const router = express.Router();
 const adminController = require('../controllers/adminController');
 const indexController = require('../controllers/indexController');
 const userController = require('../controllers/userController');
-const {
-  catchErrors,
-  upload,
-  saveFile,
-} = require('../controllers/controlHelper');
+const { catchErrors } = require('../controllers/controlHelper');
 
 /**
  * Admin ROUTES: /admin
@@ -15,30 +11,18 @@ const {
 
 router.get('/', catchErrors(indexController.getPosts));
 
-router.param('username', userController.getUserByUsername);
+router.param('recordID', userController.getRecordByID);
 
-router.param('slug', indexController.getPostBySlug);
+router.param('flatID', indexController.getFlatBySlug);
 
 router
-  .route('/article/:username')
+  .route('/:recordID')
   .get(userController.checkAuth, catchErrors(adminController.getAllPosts))
-  .post(
-    userController.checkAuth,
-    upload.fields([
-      { name: 'video', maxCount: 1 },
-      { name: 'photos', maxCount: 6 },
-    ]),
-    catchErrors(saveFile),
-    catchErrors(adminController.savePost)
-  );
+  .post(userController.checkAuth, catchErrors(adminController.savePost));
 
 router
-  .route('/:slug')
-  .delete(
-    userController.checkAuth,
-    catchErrors(adminController.deleteAllFiles),
-    catchErrors(adminController.deletePost)
-  )
+  .route('/:flatID')
+  .delete(userController.checkAuth, catchErrors(adminController.deletePost))
   .put(
     userController.checkAuth,
     upload.fields([
@@ -54,9 +38,5 @@ router.get(
   userController.checkAuth,
   catchErrors(adminController.getUsers)
 );
-
-router.delete('/:slug/photos/:file', catchErrors(adminController.deleteFile));
-
-router.delete('/:slug/video/:file', catchErrors(adminController.deleteFile));
 
 module.exports = router;

@@ -9,7 +9,7 @@ const { catchErrors } = require('../controllers/controlHelper');
  */
 router.get('/', catchErrors(indexController.getPosts));
 
-router.param('slug', indexController.getPostBySlug);
+router.param('slug', indexController.getFlatBySlug);
 
 router.put(
   '/:slug/like',
