@@ -7,18 +7,17 @@ const FlatSchema = new Schema({
   flatno: { type: Number, required: true },
   name: { type: String, required: true },
   description: { type: String, required: true },
-  publishedDate: { type: Date, default: Date.now },
-  reciept: [{ type: Schema.ObjectId, ref: 'File' }],
+  ofRecord: { type: Schema.ObjectId, ref: 'Record', required: false },
   maintenance: {
-    amount: { type: Number, required: true },
+    amount: { type: Number, required: true, default: 0 },
     penality: { type: Number, required: true, default: 0 },
   },
   shedMoney: {
-    amount: { type: Number, required: true },
+    amount: { type: Number, required: true, default: 0 },
     penality: { type: Number, required: true, default: 0 },
   },
   liftFund: {
-    amount: { type: Number, required: true },
+    amount: { type: Number, required: true, default: 0 },
     penality: { type: Number, required: true, default: 0 },
   },
   convenance: {
@@ -31,6 +30,21 @@ const FlatSchema = new Schema({
     amount: { type: Number, required: true, default: 0 },
   },
 });
+
+const calculateTotalBy = function (next) {
+  this.finalAmount =
+    +this.maintenance.amount +
+    this.maintenance.penality +
+    this.shedMoney.amount +
+    this.shedMoney.penality +
+    this.liftFund.amount +
+    this.liftFund.penality +
+    this.convenance.amount +
+    this.sinkRepair.amount;
+  next();
+};
+
+FlatSchema.pre('save', calculateTotalBy);
 
 /* Create index on keys for more performant querying/Flat sorting */
 FlatSchema.index({ publishedDate: 1 });
