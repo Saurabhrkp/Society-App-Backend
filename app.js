@@ -20,7 +20,7 @@ app.use(require('express-status-monitor')());
 
 // Calling routes
 const userRouter = require('./routes/users');
-const adminRouter = require('./routes/admin');
+const indexRouter = require('./routes/index');
 
 // Logging
 app.use(logger('dev'));
@@ -64,7 +64,7 @@ app.use((req, res, next) => {
 
 // Routes
 app.use('/api', userRouter);
-app.use('/admin', adminRouter);
+app.use('/', indexRouter);
 
 /* Error handling from async / await functions */
 app.use((err, req, res, next) => {
