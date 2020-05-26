@@ -1,7 +1,6 @@
 const express = require('express');
 const passport = require('passport');
 const session = require('express-session');
-const path = require('path');
 const logger = require('morgan');
 const bodyParser = require('body-parser');
 const MongoStore = require('connect-mongo')(session);
@@ -30,9 +29,6 @@ app.use(bodyParser.json());
 
 // Express body parser
 app.use(express.urlencoded({ extended: true }));
-
-// Servering static files
-app.use(express.static(path.join(__dirname, 'public')));
 
 // Express session
 app.use(
