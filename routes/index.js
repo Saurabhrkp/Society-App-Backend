@@ -27,8 +27,8 @@ router.get(
   catchErrors(indexController.month_delete_get)
 );
 
-// POST request to delete Month Records.
-router.post(
+// DELETE request to delete Month Records.
+router.delete(
   '/month/:id/delete',
   userController.checkAuth,
   catchErrors(indexController.month_delete_post)
@@ -41,8 +41,8 @@ router.get(
   catchErrors(indexController.month_update_get)
 );
 
-// POST request to update Month Records.
-router.post(
+// PUT request to update Month Records.
+router.put(
   '/month/:id/update',
   userController.checkAuth,
   catchErrors(indexController.month_update_post)
@@ -76,8 +76,8 @@ router.get(
   catchErrors(indexController.flat_delete_get)
 );
 
-// POST request to delete Flat.
-router.post(
+// DELETE request to delete Flat.
+router.delete(
   '/flat/:id/delete',
   userController.checkAuth,
   catchErrors(indexController.flat_delete_post)
@@ -90,8 +90,8 @@ router.get(
   catchErrors(indexController.flat_update_get)
 );
 
-// POST request to update Flat.
-router.post(
+// PUT request to update Flat.
+router.put(
   '/flat/:id/update',
   userController.checkAuth,
   catchErrors(indexController.flat_update_post)
@@ -125,8 +125,8 @@ router.get(
   catchErrors(indexController.record_delete_get)
 );
 
-// POST request to delete Record.
-router.post(
+// DELETE request to delete Record.
+router.delete(
   '/record/:id/delete',
   userController.checkAuth,
   catchErrors(indexController.record_delete_post)
@@ -139,8 +139,8 @@ router.get(
   catchErrors(indexController.record_update_get)
 );
 
-// POST request to update Record.
-router.post(
+// PUT request to update Record.
+router.put(
   '/record/:id/update',
   userController.checkAuth,
   catchErrors(indexController.record_update_post)
