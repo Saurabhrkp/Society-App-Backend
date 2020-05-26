@@ -1,163 +1,156 @@
 const express = require('express');
 const router = express.Router();
-const indexController = require('../controllers/indexController');
+const monthController = require('../controllers/monthController');
+const flatController = require('../controllers/flatController');
+const recordController = require('../controllers/recordController');
 const userController = require('../controllers/userController');
 const { catchErrors } = require('../controllers/controlHelper');
-
-/**
- * POST ROUTES: /posts/
- */
-router.get(
-  '/',
-  userController.checkAuth,
-  catchErrors(indexController.month_display)
-);
 
 // POST request for creating Month Records.
 router.post(
   '/month/create',
   userController.checkAuth,
-  catchErrors(indexController.month_create_post)
+  catchErrors(monthController.month_create_post)
 );
 
 // GET request to delete Month Records.
 router.get(
   '/month/:id/delete',
   userController.checkAuth,
-  catchErrors(indexController.month_delete_get)
+  catchErrors(monthController.month_delete_get)
 );
 
 // DELETE request to delete Month Records.
 router.delete(
   '/month/:id/delete',
   userController.checkAuth,
-  catchErrors(indexController.month_delete_post)
+  catchErrors(monthController.month_delete)
 );
 
 // GET request to update Month Records.
 router.get(
   '/month/:id/update',
   userController.checkAuth,
-  catchErrors(indexController.month_update_get)
+  catchErrors(monthController.month_update_get)
 );
 
 // PUT request to update Month Records.
 router.put(
   '/month/:id/update',
   userController.checkAuth,
-  catchErrors(indexController.month_update_post)
+  catchErrors(monthController.month_update_put)
 );
 
 // GET request for one Month Records.
 router.get(
   '/month/:id',
   userController.checkAuth,
-  catchErrors(indexController.month_detail)
+  catchErrors(monthController.month_detail)
 );
 
 // GET request for list of all Month Records.
 router.get(
   '/months',
   userController.checkAuth,
-  catchErrors(indexController.month_list)
+  catchErrors(monthController.month_list)
 );
 
 // POST request for creating Flat.
 router.post(
   '/flat/create',
   userController.checkAuth,
-  catchErrors(indexController.flat_create_post)
+  catchErrors(flatController.flat_create_post)
 );
 
 // GET request to delete Flat.
 router.get(
   '/flat/:id/delete',
   userController.checkAuth,
-  catchErrors(indexController.flat_delete_get)
+  catchErrors(flatController.flat_delete_get)
 );
 
 // DELETE request to delete Flat.
 router.delete(
   '/flat/:id/delete',
   userController.checkAuth,
-  catchErrors(indexController.flat_delete_post)
+  catchErrors(flatController.flat_delete)
 );
 
 // GET request to update Flat.
 router.get(
   '/flat/:id/update',
   userController.checkAuth,
-  catchErrors(indexController.flat_update_get)
+  catchErrors(flatController.flat_update_get)
 );
 
 // PUT request to update Flat.
 router.put(
   '/flat/:id/update',
   userController.checkAuth,
-  catchErrors(indexController.flat_update_post)
+  catchErrors(flatController.flat_update_put)
 );
 
 // GET request for one Flat.
 router.get(
   '/flat/:id',
   userController.checkAuth,
-  catchErrors(indexController.flat_detail)
+  catchErrors(flatController.flat_detail)
 );
 
 // GET request for list of all Flat.
 router.get(
   '/flats',
   userController.checkAuth,
-  catchErrors(indexController.flat_list)
+  catchErrors(flatController.flat_list)
 );
 
 // POST request for creating Record.
 router.post(
   '/record/create',
   userController.checkAuth,
-  catchErrors(indexController.record_create_post)
+  catchErrors(recordController.record_create_post)
 );
 
 // GET request to delete Record.
 router.get(
   '/record/:id/delete',
   userController.checkAuth,
-  catchErrors(indexController.record_delete_get)
+  catchErrors(recordController.record_delete_get)
 );
 
 // DELETE request to delete Record.
 router.delete(
   '/record/:id/delete',
   userController.checkAuth,
-  catchErrors(indexController.record_delete_post)
+  catchErrors(recordController.record_delete)
 );
 
 // GET request to update Record.
 router.get(
   '/record/:id/update',
   userController.checkAuth,
-  catchErrors(indexController.record_update_get)
+  catchErrors(recordController.record_update_get)
 );
 
 // PUT request to update Record.
 router.put(
   '/record/:id/update',
   userController.checkAuth,
-  catchErrors(indexController.record_update_post)
+  catchErrors(recordController.record_update_put)
 );
 
 // GET request for one Record.
 router.get(
   '/record/:id',
   userController.checkAuth,
-  catchErrors(indexController.record_detail)
+  catchErrors(recordController.record_detail)
 );
 
 // GET request for list of all Record.
 router.get(
   '/records',
   userController.checkAuth,
-  catchErrors(indexController.record_list)
+  catchErrors(recordController.record_list)
 );
 
 module.exports = router;
