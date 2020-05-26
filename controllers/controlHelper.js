@@ -5,4 +5,9 @@ const catchErrors = (fn) => {
   };
 };
 
-module.exports = { catchErrors };
+const setSearchID = (req, res, next, ID) => {
+  req.searchID = ID;
+  next();
+};
+
+module.exports = { catchErrors, setSearchID };
