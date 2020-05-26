@@ -15,12 +15,14 @@ MonthSchema.virtual('url').get(function () {
   return '/month/' + this._id;
 });
 
-const autoPopulateUserBy = function (next) {
+const autoPopulateMonthBy = function (next) {
   this.populate('records');
   next();
 };
 
-MonthSchema.pre('findOne', autoPopulateUserBy).pre('find', autoPopulateUserBy);
+MonthSchema.pre('findOne', autoPopulateMonthBy)
+  .pre('find', autoPopulateMonthBy)
+  .pre('findOneAndUpdate', autoPopulateMonthBy);
 
 /* The MongoDBErrorHandler plugin gives us a better 'unique' error, rather than: "11000 duplicate key" */
 MonthSchema.plugin(mongodbErrorHandler);

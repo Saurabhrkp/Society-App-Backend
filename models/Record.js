@@ -48,12 +48,14 @@ const calculateTotalBy = function (next) {
 
 RecordSchema.pre('save', calculateTotalBy);
 
-const autoPopulateUserBy = function (next) {
+const autoPopulateRecordBy = function (next) {
   this.populate('idOfFlat, recordOfMonth');
   next();
 };
 
-RecordSchema.pre('findOne', autoPopulateUserBy).pre('find', autoPopulateUserBy);
+RecordSchema.pre('findOne', autoPopulateRecordBy)
+  .pre('find', autoPopulateRecordBy)
+  .pre('findOneAndUpdate', autoPopulateRecordBy);
 
 /* The MongoDBErrorHandler plugin gives us a better 'unique' error, rather than: "11000 duplicate key" */
 RecordSchema.plugin(mongodbErrorHandler);

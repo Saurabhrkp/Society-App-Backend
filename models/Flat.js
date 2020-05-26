@@ -19,12 +19,14 @@ FlatSchema.virtual('url').get(function () {
   return '/flat/' + this._id;
 });
 
-const autoPopulateUserBy = function (next) {
+const autoPopulateFlatBy = function (next) {
   this.populate('records');
   next();
 };
 
-FlatSchema.pre('findOne', autoPopulateUserBy).pre('find', autoPopulateUserBy);
+FlatSchema.pre('findOne', autoPopulateFlatBy)
+  .pre('find', autoPopulateFlatBy)
+  .pre('findOneAndUpdate', autoPopulateFlatBy);
 
 /* The MongoDBErrorHandler plugin gives us a better 'unique' error, rather than: "11000 duplicate key" */
 FlatSchema.plugin(mongodbErrorHandler);
