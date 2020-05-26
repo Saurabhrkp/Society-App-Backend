@@ -27,7 +27,7 @@ exports.index = async (req, res, next) => {
 exports.month_list = async (req, res, next) => {
   try {
     const list_months = await Month.find();
-    res.json({ title: 'Month Record List', month_list: list_months });
+    res.json({ title: 'Month Record List', list_months });
   } catch (error) {
     return next(error);
   }
@@ -100,7 +100,7 @@ exports.month_delete = async (req, res, next) => {
     recordsArray.forEach(async (element) => {
       const record = await Record.findByIdAndRemove(element.id);
       await Flat.findOneAndUpdate(
-        { _id: data.id },
+        { _id: record.idOfFlat.id },
         { pull: { records: record.id } }
       );
     });
