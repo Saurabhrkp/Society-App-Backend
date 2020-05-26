@@ -24,3 +24,9 @@ We can use Electron.js with any of library/framework like React, VUE or Angular
 10. Achieve CURD Operations.
 11. Achieve all routes.
 12. Fix Bugs.
+
+**Changes Made Yesterday Night**
+We have to work on the cntroller now
+One Flat have many records (Flats will have all records grouped in Arrays[records(ID)])
+records have entiry for it month, For which month does this record exists (Each Records are Linked Respectively with the Flat for which they exist and for what month they are created)
+then each month have many records (Means all records for month are grouped in that month document by Array[ID] )
