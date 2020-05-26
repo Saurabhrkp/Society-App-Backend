@@ -4,9 +4,9 @@ const Record = require('../models/Record');
 const { body, validationResult, sanitizeBody } = require('express-validator');
 const async = require('async');
 
-exports.index = (req, res) => {
-  async.parallel(
-    {
+exports.index = async (req, res, next) => {
+  try {
+    const results = await async.parallel({
       month_count: (callback) => {
         Month.countDocuments(callback);
       },
@@ -16,51 +16,31 @@ exports.index = (req, res) => {
       record_count: (callback) => {
         Record.countDocuments(callback);
       },
-    },
-    (err, results) => {
-      res.json({
-        title: 'Home',
-        error: err,
-        data: results,
-      });
-    }
-  );
+    });
+    res.json({ title: 'Home', results });
+  } catch (error) {
+    return next(error);
+  }
 };
 
 // Display list of all Months.
-exports.month_list = (req, res) => {
-  Month.find().exec((err, list_months) => {
-    if (err) {
-      return next(err);
-    }
+exports.month_list = async (req, res, next) => {
+  try {
+    const list_months = await Month.find();
     res.json({ title: 'Month Record List', month_list: list_months });
-  });
+  } catch (error) {
+    return next(error);
+  }
 };
 
 // Display detail page for a specific Month.
-exports.month_detail = (req, res) => {
-  async.parallel(
-    {
-      month: (callback) => {
-        Month.findById(req.params.id).exec(callback);
-      },
-    },
-    (err, results) => {
-      if (err) {
-        return next(err);
-      }
-      if (results.month == null) {
-        // No results.
-        var err = new Error('Month record not found');
-        err.status = 404;
-        return next(err);
-      }
-      res.json({
-        title: results.month.title,
-        month: results.month,
-      });
-    }
-  );
+exports.month_detail = async (req, res, next) => {
+  try {
+    const month = await Month.findById(req.searchID);
+    res.json({ title: month.title, month });
+  } catch (error) {
+    return next(error);
+  }
 };
 
 // Handle Month create on POST.
@@ -96,9 +76,9 @@ exports.month_create_post = async (req, res, next) => {
     return;
   } else {
     // Data from form is valid. Save month.
-    month.save((err) => {
-      if (err) {
-        return next(err);
+    month.save((error) => {
+      if (error) {
+        return next(error);
       }
       // Successful - redirect to new month record.
       res.redirect(month.url);
@@ -106,83 +86,36 @@ exports.month_create_post = async (req, res, next) => {
   }
 };
 
-// Display Month delete form on GET.
-exports.month_delete_get = (req, res) => {
-  async.waterfall(
-    {
-      month: (callback) => {
-        Month.findById(req.params.id).exec(callback);
-      },
-      records: (callback) => {
-        Record.find({ recordOfMonth: req.params.id }).exec(callback);
-      },
-    },
-    (err, results) => {
-      if (err) {
-        return next(err);
-      }
-      if (results.month == null) {
-        // No results.
-        res.redirect('/months');
-      }
-      // Successful, so render.
-      res.json({
-        title: results.month.title,
-        month: results.month,
-        records: results.records,
-      });
-    }
-  );
-};
-
 // Handle Month delete on POST.
-exports.month_delete = (req, res) => {
+exports.month_delete = async (req, res, next) => {
   // Assume the post has valid id (ie no validation/sanitization).
-  async.parallel(
-    {
-      month: (callback) => {
-        Month.findById(req.params.id).exec(callback);
-      },
+  try {
+    const results = await async.parallel({
       records: (callback) => {
-        Record.find({ recordOfMonth: req.params.id }).exec(callback);
+        Record.find({ recordOfMonth: req.searchID }).exec(callback);
       },
-    },
-    (err, results) => {
-      if (err) {
-        return next(err);
-      }
-      // Success
-      // Month has no MonthInstance objects. Delete object and redirect to the list of months.
-      Month.findByIdAndRemove(req.body.id, (err) => {
-        if (err) {
-          return next(err);
-        }
-      });
-      let recordsArray = results.records;
-      recordsArray.forEach((element) => {
-        Record.findByIdAndRemove(element.id, async (err, data) => {
-          if (err) {
-            return next(err);
-          }
-          await Flat.findOneAndUpdate(
-            { _id: data.id },
-            { pull: { records: data.id } },
-            (err) => {
-              if (err) {
-                return next(err);
-              }
-            }
-          );
-        });
-      });
-    }
-  );
+    });
+    await Month.findByIdAndRemove(req.searchID);
+    let recordsArray = results.records;
+    recordsArray.forEach(async (element) => {
+      const record = await Record.findByIdAndRemove(element.id);
+      await Flat.findOneAndUpdate(
+        { _id: data.id },
+        { pull: { records: record.id } }
+      );
+    });
+    res.redirect('/');
+  } catch (error) {
+    return next(error);
+  }
 };
-
-// Display Month update form on GET.
-exports.month_update_get = (req, res) => {
-  res.send('NOT IMPLEMENTED: Month update GET');
-};
+/**
+  //? assuming openFiles is an array of file names and saveFile is a function
+  //? to save the modified contents of that file:
+    async.each(openFiles, saveFile, function(error){
+  //? if any of the saves produced an error, error would equal that error
+    });
+ */
 
 // Handle Month update on POST.
 exports.month_update_put = async (req, res, next) => {
@@ -202,10 +135,10 @@ exports.month_update_put = async (req, res, next) => {
   const errors = validationResult(req);
   // Create a Month object with escaped and trimmed data.
 
-  let month = new Month({
+  let month = {
     title: req.body.title,
     description: req.body.description,
-  });
+  };
 
   if (!errors.isEmpty()) {
     // There are errors. Send form again with sanitized values/error messages.
@@ -217,9 +150,9 @@ exports.month_update_put = async (req, res, next) => {
     return;
   } else {
     // Data from form is valid. Update the record.
-    Month.findByIdAndUpdate(req.params.id, month, {}, (err, updatedMonth) => {
-      if (err) {
-        return next(err);
+    Month.findByIdAndUpdate(req.searchID, month, {}, (error, updatedMonth) => {
+      if (error) {
+        return next(error);
       }
       // Successful - redirect to month detail page.
       res.redirect(updatedMonth.url);
