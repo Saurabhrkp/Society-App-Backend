@@ -4,20 +4,20 @@ const userController = require('../controllers/userController');
 const { catchErrors } = require('../controllers/controlHelper');
 
 /**
- * AUTH ROUTES: /api/auth
+ * AUTH ROUTES: /api
  */
 
 // Register
 router.post(
-  '/auth/signup',
+  '/signup',
   userController.validateSignup,
   catchErrors(userController.signup)
 );
 
 // Login
-router.post('/auth/signin', userController.signin);
+router.post('/signin', userController.signin);
 
 // Logout
-router.get('/auth/signout', userController.signout);
+router.get('/signout', userController.signout);
 
 module.exports = router;
