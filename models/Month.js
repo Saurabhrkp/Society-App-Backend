@@ -4,8 +4,9 @@ const mongoosePaginate = require('mongoose-paginate-v2');
 const Schema = mongoose.Schema;
 
 const MonthSchema = new Schema({
-  date: { type: Date, default: Date.now },
+  title: { type: String, required: true },
   description: { type: String, required: true },
+  date: { type: Date, default: Date.now },
   records: [{ type: Schema.ObjectId, ref: 'Record', required: false }],
 });
 

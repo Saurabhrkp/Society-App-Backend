@@ -6,6 +6,9 @@ const recordController = require('../controllers/recordController');
 const userController = require('../controllers/userController');
 const { catchErrors } = require('../controllers/controlHelper');
 
+// GET home page.
+router.get('/', userController.checkAuth, catchErrors(monthController.index));
+
 // POST request for creating Month Records.
 router.post(
   '/month/create',
