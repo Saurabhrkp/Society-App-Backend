@@ -17,19 +17,9 @@ exports.record_create_post = (req, res) => {
   res.send('NOT IMPLEMENTED: Record create POST');
 };
 
-// Display Record delete form on GET.
-exports.record_delete_get = (req, res) => {
-  res.send('NOT IMPLEMENTED: Record delete GET');
-};
-
 // Handle Record delete on POST.
 exports.record_delete = (req, res) => {
   res.send('NOT IMPLEMENTED: Record delete POST');
-};
-
-// Display Record update form on GET.
-exports.record_update_get = (req, res) => {
-  res.send('NOT IMPLEMENTED: Record update GET');
 };
 
 // Handle Record update on POST.

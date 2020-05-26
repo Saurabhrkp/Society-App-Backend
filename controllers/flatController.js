@@ -17,19 +17,9 @@ exports.flat_create_post = (req, res) => {
   res.send('NOT IMPLEMENTED: Flat create POST');
 };
 
-// Display Flat delete form on GET.
-exports.flat_delete_get = (req, res) => {
-  res.send('NOT IMPLEMENTED: Flat delete GET');
-};
-
 // Handle Flat delete on POST.
 exports.flat_delete = (req, res) => {
   res.send('NOT IMPLEMENTED: Flat delete POST');
-};
-
-// Display Flat update form on GET.
-exports.flat_update_get = (req, res) => {
-  res.send('NOT IMPLEMENTED: Flat update GET');
 };
 
 // Handle Flat update on POST.
