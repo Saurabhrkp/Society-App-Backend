@@ -39,11 +39,13 @@ exports.flat_create_post = async (req, res, next) => {
     .trim()
     .isLength({ min: 1 })
     .run(req);
-  await body('email').trim().isEmail().normalizeEmail().run(req);
-  let regex = /^((\+){0,1}91(\s){0,1}(\-){0,1}(\s){0,1}){0,1}98(\s){0,1}(\-){0,1}(\s){0,1}[1-9]{1}[0-9]{7}$/;
+  let regex = /^(\+\d{1,3}[- ]?)?\d{10}$/;
   await body('phone').trim().matches(regex).run(req);
   await body('rental').trim().toBoolean().run(req);
   await body('bhk').trim().isNumeric().run(req);
+  if (req.body.email) {
+    await body('email').trim().isEmail().normalizeEmail().run(req);
+  }
   // Process request after validation and sanitization.
   // Extract the validation errors from a request.
   const errors = validationResult(req);
@@ -118,11 +120,13 @@ exports.flat_update_put = async (req, res, next) => {
     .trim()
     .isLength({ min: 1 })
     .run(req);
-  await body('email').trim().isEmail().normalizeEmail().run(req);
-  let regex = /^((\+){0,1}91(\s){0,1}(\-){0,1}(\s){0,1}){0,1}98(\s){0,1}(\-){0,1}(\s){0,1}[1-9]{1}[0-9]{7}$/;
+  let regex = /^(\+\d{1,3}[- ]?)?\d{10}$/;
   await body('phone').trim().matches(regex).run(req);
   await body('rental').trim().toBoolean().run(req);
   await body('bhk').trim().isNumeric().run(req);
+  if (req.body.email) {
+    await body('email').trim().isEmail().normalizeEmail().run(req);
+  }
   // Process request after validation and sanitization.
   // Extract the validation errors from a request.
   const errors = validationResult(req);
@@ -152,7 +156,7 @@ exports.flat_update_put = async (req, res, next) => {
       if (error) {
         return next(error);
       }
-      // Successful - redirect to month detail page.
+      // Successful - redirect to Flat detail page.
       res.redirect(updatedFlat.url);
     });
   }
