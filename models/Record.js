@@ -17,15 +17,9 @@ const RecordSchema = new Schema({
     amount: { type: Number, required: true, default: 0 },
     penality: { type: Number, required: true, default: 0 },
   },
-  convenance: {
-    amount: { type: Number, required: true, default: 0 },
-  },
-  sinkRepair: {
-    amount: { type: Number, required: true, default: 0 },
-  },
-  finalAmount: {
-    amount: { type: Number, required: true, default: 0 },
-  },
+  convenance: { type: Number, required: true, default: 0 },
+  sinkRepair: { type: Number, required: true, default: 0 },
+  finalAmount: { type: Number, required: true, default: 0 },
 });
 
 // Virtual for this RecordSchema object's URL.
@@ -35,21 +29,22 @@ RecordSchema.virtual('url').get(function () {
 
 const calculateTotalBy = function (next) {
   this.finalAmount =
-    +this.maintenance.amount +
+    this.maintenance.amount +
     this.maintenance.penality +
     this.shedMoney.amount +
     this.shedMoney.penality +
     this.liftFund.amount +
     this.liftFund.penality +
-    this.convenance.amount +
-    this.sinkRepair.amount;
+    this.convenance +
+    this.sinkRepair;
   next();
 };
 
 RecordSchema.pre('save', calculateTotalBy);
 
 const autoPopulateRecordBy = function (next) {
-  this.populate('idOfFlat, recordOfMonth');
+  this.populate('idOfFlat');
+  this.populate('recordOfMonth');
   next();
 };
 
