@@ -126,12 +126,8 @@ exports.record_update_put = async (req, res, next) => {
       amount: req.body.liftFund_amount,
       penality: req.body.liftFund_penality,
     },
-    convenance: {
-      amount: req.body.convenance,
-    },
-    sinkRepair: {
-      amount: req.body.sinkRepair,
-    },
+    convenance: req.body.convenance,
+    sinkRepair: req.body.sinkRepair,
   };
 
   if (!errors.isEmpty()) {
