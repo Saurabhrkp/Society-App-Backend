@@ -70,14 +70,14 @@ exports.flat_create_post = async (req, res, next) => {
     });
     return;
   } else {
-    // Data from form is valid. Save flat.
-    flat.save((error) => {
-      if (error) {
-        return next(error);
-      }
+    try {
+      // Data from form is valid. Save flat.
+      await flat.save();
       // Successful - redirect to new flat record.
       res.redirect(flat.url);
-    });
+    } catch (error) {
+      next(error);
+    }
   }
 };
 
@@ -151,13 +151,13 @@ exports.flat_update_put = async (req, res, next) => {
     });
     return;
   } else {
-    // Data from form is valid. Update the record.
-    Flat.findByIdAndUpdate(req.searchID, flat, {}, (error, updatedFlat) => {
-      if (error) {
-        return next(error);
-      }
+    try {
+      // Data from form is valid. Update the record.
+      let updatedFlat = await Flat.findByIdAndUpdate(req.searchID, flat, {});
       // Successful - redirect to Flat detail page.
       res.redirect(updatedFlat.url);
-    });
+    } catch (error) {
+      next(error);
+    }
   }
 };

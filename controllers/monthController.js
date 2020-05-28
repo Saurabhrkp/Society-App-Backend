@@ -75,14 +75,14 @@ exports.month_create_post = async (req, res, next) => {
     });
     return;
   } else {
-    // Data from form is valid. Save month.
-    month.save((error) => {
-      if (error) {
-        return next(error);
-      }
+    try {
+      // Data from form is valid. Save month.
+      await month.save();
       // Successful - redirect to new month record.
       res.redirect(month.url);
-    });
+    } catch (error) {
+      next(error);
+    }
   }
 };
 
@@ -149,13 +149,13 @@ exports.month_update_put = async (req, res, next) => {
     });
     return;
   } else {
-    // Data from form is valid. Update the record.
-    Month.findByIdAndUpdate(req.searchID, month, {}, (error, updatedMonth) => {
-      if (error) {
-        return next(error);
-      }
+    try {
+      // Data from form is valid. Update the record.
+      let updatedMonth = await Month.findByIdAndUpdate(req.searchID, month, {});
       // Successful - redirect to month detail page.
       res.redirect(updatedMonth.url);
-    });
+    } catch (error) {
+      next(error);
+    }
   }
 };

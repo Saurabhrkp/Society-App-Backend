@@ -2,6 +2,7 @@ const Month = require('../models/Month');
 const Flat = require('../models/Flat');
 const Record = require('../models/Record');
 const { body, validationResult } = require('express-validator');
+const async = require('async');
 
 const calculateTotalBy = (record) => {
   return (
@@ -84,14 +85,20 @@ exports.record_create_post = async (req, res, next) => {
       // Data from form is valid. Save record.
       record.finalAmount = calculateTotalBy(record);
       await record.save();
-      await Flat.findOneAndUpdate(
-        { _id: record.idOfFlat },
-        { $push: { records: record.id } }
-      );
-      await Month.findOneAndUpdate(
-        { _id: record.recordOfMonth },
-        { $push: { records: record.id } }
-      );
+      await async.parallel([
+        (callback) => {
+          Flat.findOneAndUpdate(
+            { _id: record.idOfFlat },
+            { $push: { records: record.id } }
+          ).exec(callback);
+        },
+        (callback) => {
+          Month.findOneAndUpdate(
+            { _id: record.recordOfMonth },
+            { $push: { records: record.id } }
+          ).exec(callback);
+        },
+      ]);
       // Successful - redirect to new record record.
       res.redirect(record.url);
     } catch (error) {
@@ -105,14 +112,20 @@ exports.record_delete = async (req, res, next) => {
   // Assume the post has valid id (ie no validation/sanitization).
   try {
     const record = await Record.findByIdAndRemove(req.searchID);
-    await Month.findOneAndUpdate(
-      { _id: record.recordOfMonth._id },
-      { $pull: { records: record.id } }
-    );
-    await Flat.findOneAndUpdate(
-      { _id: record.recordOfMonth._id },
-      { $pull: { records: record.id } }
-    );
+    await async.parallel([
+      (callback) => {
+        Month.findOneAndUpdate(
+          { _id: record.recordOfMonth._id },
+          { $pull: { records: record.id } }
+        ).exec(callback);
+      },
+      (callback) => {
+        Flat.findOneAndUpdate(
+          { _id: record.recordOfMonth._id },
+          { $pull: { records: record.id } }
+        ).exec(callback);
+      },
+    ]);
     res.redirect('/');
   } catch (error) {
     return next(error);
@@ -161,19 +174,17 @@ exports.record_update_put = async (req, res, next) => {
     });
     return;
   } else {
-    // Data from form is valid. Update the record.
-    record.finalAmount = calculateTotalBy(record);
-    Record.findByIdAndUpdate(
-      req.searchID,
-      record,
-      {},
-      (error, updatedRecord) => {
-        if (error) {
-          return next(error);
-        }
-        // Successful - redirect to Record detail page.
-        res.redirect(updatedRecord.url);
-      }
-    );
+    try {
+      // Data from form is valid. Update the record.
+      record.finalAmount = calculateTotalBy(record);
+      let updatedRecord = await Record.findByIdAndUpdate(
+        req.searchID,
+        record,
+        {}
+      );
+      res.redirect(updatedRecord.url);
+    } catch (error) {
+      next(error);
+    }
   }
 };
