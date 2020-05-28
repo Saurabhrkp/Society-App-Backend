@@ -96,26 +96,19 @@ exports.month_delete = async (req, res, next) => {
       },
     });
     await Month.findByIdAndRemove(req.searchID);
-    let recordsArray = results.records;
-    recordsArray.forEach(async (element) => {
+    const deleteRefrence = async (element) => {
       const record = await Record.findByIdAndRemove(element.id);
       await Flat.findOneAndUpdate(
         { _id: record.idOfFlat._id },
         { $pull: { records: record.id } }
       );
-    });
+    };
+    await async.each(results.records, deleteRefrence);
     res.redirect('/');
   } catch (error) {
     return next(error);
   }
 };
-/**
-  //? assuming openFiles is an array of file names and saveFile is a function
-  //? to save the modified contents of that file:
-    async.each(openFiles, saveFile, function(error){
-  //? if any of the saves produced an error, error would equal that error
-    });
- */
 
 // Handle Month update on POST.
 exports.month_update_put = async (req, res, next) => {

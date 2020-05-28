@@ -91,14 +91,14 @@ exports.flat_delete = async (req, res, next) => {
       },
     });
     await Flat.findByIdAndRemove(req.searchID);
-    let recordsArray = results.records;
-    recordsArray.forEach(async (element) => {
+    const deleteRefrence = async (element) => {
       const record = await Record.findByIdAndRemove(element.id);
       await Month.findOneAndUpdate(
         { _id: record.recordOfMonth._id },
         { $pull: { records: record.id } }
       );
-    });
+    };
+    await async.each(results.records, deleteRefrence);
     res.redirect('/');
   } catch (error) {
     return next(error);
