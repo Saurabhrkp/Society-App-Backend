@@ -3,6 +3,19 @@ const Flat = require('../models/Flat');
 const Record = require('../models/Record');
 const { body, validationResult } = require('express-validator');
 
+const calculateTotalBy = (record) => {
+  return (
+    parseInt(record.maintenance.amount) +
+    parseInt(record.maintenance.penality) +
+    parseInt(record.shedMoney.amount) +
+    parseInt(record.shedMoney.penality) +
+    parseInt(record.liftFund.amount) +
+    parseInt(record.liftFund.penality) +
+    parseInt(record.convenance) +
+    parseInt(record.sinkRepair)
+  );
+};
+
 // Display list of all Records.
 exports.record_list = async (req, res, next) => {
   try {
@@ -67,14 +80,23 @@ exports.record_create_post = async (req, res, next) => {
     });
     return;
   } else {
-    // Data from form is valid. Save record.
-    record.save((error) => {
-      if (error) {
-        return next(error);
-      }
+    try {
+      // Data from form is valid. Save record.
+      record.finalAmount = calculateTotalBy(record);
+      await record.save();
+      await Flat.findOneAndUpdate(
+        { _id: record.idOfFlat },
+        { $push: { records: record.id } }
+      );
+      await Month.findOneAndUpdate(
+        { _id: record.recordOfMonth },
+        { $push: { records: record.id } }
+      );
       // Successful - redirect to new record record.
       res.redirect(record.url);
-    });
+    } catch (error) {
+      next(error);
+    }
   }
 };
 
@@ -84,12 +106,12 @@ exports.record_delete = async (req, res, next) => {
   try {
     const record = await Record.findByIdAndRemove(req.searchID);
     await Month.findOneAndUpdate(
-      { _id: record.recordOfMonth.id },
-      { pull: { records: record.id } }
+      { _id: record.recordOfMonth._id },
+      { $pull: { records: record.id } }
     );
     await Flat.findOneAndUpdate(
-      { _id: record.recordOfMonth.id },
-      { pull: { records: record.id } }
+      { _id: record.recordOfMonth._id },
+      { $pull: { records: record.id } }
     );
     res.redirect('/');
   } catch (error) {
@@ -140,6 +162,7 @@ exports.record_update_put = async (req, res, next) => {
     return;
   } else {
     // Data from form is valid. Update the record.
+    record.finalAmount = calculateTotalBy(record);
     Record.findByIdAndUpdate(
       req.searchID,
       record,
