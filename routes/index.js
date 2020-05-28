@@ -4,7 +4,18 @@ const monthController = require('../controllers/monthController');
 const flatController = require('../controllers/flatController');
 const recordController = require('../controllers/recordController');
 const userController = require('../controllers/userController');
-const { catchErrors, setSearchID } = require('../controllers/controlHelper');
+
+/* Error handler for async / await functions */
+const catchErrors = (fn) => {
+  return function (req, res, next) {
+    return fn(req, res, next).catch(next);
+  };
+};
+
+const setSearchID = (req, res, next, ID) => {
+  req.searchID = ID;
+  next();
+};
 
 // GET home page.
 router.get('/', userController.checkAuth, catchErrors(monthController.index));

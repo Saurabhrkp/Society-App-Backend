@@ -1,7 +1,13 @@
 const express = require('express');
 const router = express.Router();
 const userController = require('../controllers/userController');
-const { catchErrors } = require('../controllers/controlHelper');
+
+/* Error handler for async / await functions */
+const catchErrors = (fn) => {
+  return function (req, res, next) {
+    return fn(req, res, next).catch(next);
+  };
+};
 
 /**
  * AUTH ROUTES: /api
