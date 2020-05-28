@@ -24,9 +24,7 @@ const autoPopulateFlatBy = function (next) {
   next();
 };
 
-FlatSchema.pre('findOne', autoPopulateFlatBy)
-  .pre('find', autoPopulateFlatBy)
-  .pre('findOneAndUpdate', autoPopulateFlatBy);
+FlatSchema.pre('findOne', autoPopulateFlatBy);
 
 /* The MongoDBErrorHandler plugin gives us a better 'unique' error, rather than: "11000 duplicate key" */
 FlatSchema.plugin(mongodbErrorHandler);

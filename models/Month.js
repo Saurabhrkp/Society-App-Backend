@@ -20,9 +20,7 @@ const autoPopulateMonthBy = function (next) {
   next();
 };
 
-MonthSchema.pre('findOne', autoPopulateMonthBy)
-  .pre('find', autoPopulateMonthBy)
-  .pre('findOneAndUpdate', autoPopulateMonthBy);
+MonthSchema.pre('findOne', autoPopulateMonthBy);
 
 /* The MongoDBErrorHandler plugin gives us a better 'unique' error, rather than: "11000 duplicate key" */
 MonthSchema.plugin(mongodbErrorHandler);
