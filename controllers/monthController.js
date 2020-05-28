@@ -100,7 +100,7 @@ exports.month_delete = async (req, res, next) => {
     recordsArray.forEach(async (element) => {
       const record = await Record.findByIdAndRemove(element.id);
       await Flat.findOneAndUpdate(
-        { _id: record.idOfFlat.id },
+        { _id: record.idOfFlat._id },
         { $pull: { records: record.id } }
       );
     });
