@@ -96,7 +96,7 @@ exports.flat_delete = async (req, res, next) => {
       const record = await Record.findByIdAndRemove(element.id);
       await Month.findOneAndUpdate(
         { _id: record.recordOfMonth.id },
-        { pull: { records: record.id } }
+        { $pull: { records: record.id } }
       );
     });
     res.redirect('/');
