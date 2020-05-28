@@ -3,8 +3,6 @@ const mongodbErrorHandler = require('mongoose-mongodb-errors');
 const Schema = mongoose.Schema;
 
 const RecordSchema = new Schema({
-  recordOfMonth: { type: Schema.ObjectId, ref: 'Month', required: true },
-  idOfFlat: { type: Schema.ObjectId, ref: 'Flat', required: true },
   maintenance: {
     amount: { type: Number, required: true, default: 0 },
     penality: { type: Number, required: true, default: 0 },
@@ -41,16 +39,6 @@ const calculateTotalBy = function (next) {
 };
 
 RecordSchema.pre('save', calculateTotalBy);
-
-const autoPopulateRecordBy = function (next) {
-  this.populate('idOfFlat');
-  this.populate('recordOfMonth');
-  next();
-};
-
-RecordSchema.pre('findOne', autoPopulateRecordBy)
-  .pre('find', autoPopulateRecordBy)
-  .pre('findOneAndUpdate', autoPopulateRecordBy);
 
 /* The MongoDBErrorHandler plugin gives us a better 'unique' error, rather than: "11000 duplicate key" */
 RecordSchema.plugin(mongodbErrorHandler);
