@@ -121,7 +121,7 @@ exports.record_delete = async (req, res, next) => {
       },
       (callback) => {
         Flat.findOneAndUpdate(
-          { _id: record.recordOfMonth._id },
+          { _id: record.idOfFlat._id },
           { $pull: { records: record.id } }
         ).exec(callback);
       },
