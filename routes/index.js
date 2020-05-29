@@ -33,16 +33,15 @@ router.post(
 // DELETE request to delete Month Records.
 // PUT request to update Month Records.
 // GET request for one Month Records.
-router.route('/month/:id').delete(
-  userController.checkAuth,
-  catchErrors(monthController.month_delete)
-).put(
-  userController.checkAuth,
-  catchErrors(monthController.month_update_put)
-).get(
-  userController.checkAuth,
-  catchErrors(monthController.month_detail)
-);
+router
+  .route('/month/:id')
+  .delete(userController.checkAuth, catchErrors(monthController.month_delete))
+  .put(userController.checkAuth, catchErrors(monthController.month_update_put))
+  .get(
+    userController.checkAuth,
+
+    catchErrors(monthController.month_detail)
+  );
 
 // GET request for list of all Month Records.
 router.get(
@@ -61,16 +60,11 @@ router.post(
 // DELETE request to delete Flat.
 // PUT request to update Flat.
 // GET request for one Flat.
-router.route('/flat/:id').delete(
-  userController.checkAuth,
-  catchErrors(flatController.flat_delete)
-).put(
-  userController.checkAuth,
-  catchErrors(flatController.flat_update_put)
-).get(
-  userController.checkAuth,
-  catchErrors(flatController.flat_detail)
-);
+router
+  .route('/flat/:id')
+  .delete(userController.checkAuth, catchErrors(flatController.flat_delete))
+  .put(userController.checkAuth, catchErrors(flatController.flat_update_put))
+  .get(userController.checkAuth, catchErrors(flatController.flat_detail));
 
 // GET request for list of all Flat.
 router.get(
@@ -89,16 +83,14 @@ router.post(
 // DELETE request to delete Record.
 // PUT request to update Record.
 // GET request for one Record.
-router.route('/record/:id').delete(
-  userController.checkAuth,
-  catchErrors(recordController.record_delete)
-).put(
-  userController.checkAuth,
-  catchErrors(recordController.record_update_put)
-).get(
-  userController.checkAuth,
-  catchErrors(recordController.record_detail)
-);
+router
+  .route('/record/:id')
+  .delete(userController.checkAuth, catchErrors(recordController.record_delete))
+  .put(
+    userController.checkAuth,
+    catchErrors(recordController.record_update_put)
+  )
+  .get(userController.checkAuth, catchErrors(recordController.record_detail));
 
 // GET request for list of all Record.
 router.get(
