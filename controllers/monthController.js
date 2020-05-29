@@ -1,7 +1,7 @@
 const Month = require('../models/Month');
 const Flat = require('../models/Flat');
 const Record = require('../models/Record');
-const { body, validationResult, sanitizeBody } = require('express-validator');
+const { body, validationResult } = require('express-validator');
 const async = require('async');
 
 exports.index = async (req, res, next) => {
@@ -54,8 +54,7 @@ exports.month_create_post = async (req, res, next) => {
     .isLength({ min: 1 })
     .trim()
     .run(req);
-  // Sanitize fields.
-  sanitizeBody('*').escape();
+
   // Process request after validation and sanitization.
   // Extract the validation errors from a request.
   const errors = validationResult(req);
@@ -121,8 +120,7 @@ exports.month_update_put = async (req, res, next) => {
     .isLength({ min: 1 })
     .trim()
     .run(req);
-  // Sanitize fields.
-  sanitizeBody('*').escape();
+
   // Process request after validation and sanitization.
   // Extract the validation errors from a request.
   const errors = validationResult(req);
