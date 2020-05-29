@@ -31,22 +31,15 @@ router.post(
 );
 
 // DELETE request to delete Month Records.
-router.delete(
-  '/month/:id/delete',
+// PUT request to update Month Records.
+// GET request for one Month Records.
+router.route('/month/:id').delete(
   userController.checkAuth,
   catchErrors(monthController.month_delete)
-);
-
-// PUT request to update Month Records.
-router.put(
-  '/month/:id/update',
+).put(
   userController.checkAuth,
   catchErrors(monthController.month_update_put)
-);
-
-// GET request for one Month Records.
-router.get(
-  '/month/:id',
+).get(
   userController.checkAuth,
   catchErrors(monthController.month_detail)
 );
@@ -66,22 +59,15 @@ router.post(
 );
 
 // DELETE request to delete Flat.
-router.delete(
-  '/flat/:id/delete',
+// PUT request to update Flat.
+// GET request for one Flat.
+router.route('/flat/:id').delete(
   userController.checkAuth,
   catchErrors(flatController.flat_delete)
-);
-
-// PUT request to update Flat.
-router.put(
-  '/flat/:id/update',
+).put(
   userController.checkAuth,
   catchErrors(flatController.flat_update_put)
-);
-
-// GET request for one Flat.
-router.get(
-  '/flat/:id',
+).get(
   userController.checkAuth,
   catchErrors(flatController.flat_detail)
 );
@@ -101,22 +87,15 @@ router.post(
 );
 
 // DELETE request to delete Record.
-router.delete(
-  '/record/:id/delete',
+// PUT request to update Record.
+// GET request for one Record.
+router.route('/record/:id').delete(
   userController.checkAuth,
   catchErrors(recordController.record_delete)
-);
-
-// PUT request to update Record.
-router.put(
-  '/record/:id/update',
+).put(
   userController.checkAuth,
   catchErrors(recordController.record_update_put)
-);
-
-// GET request for one Record.
-router.get(
-  '/record/:id',
+).get(
   userController.checkAuth,
   catchErrors(recordController.record_detail)
 );
